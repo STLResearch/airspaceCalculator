@@ -45,12 +45,12 @@ function Modal() {
         },
       });
 
-      setApiData(apidata.data);
+      setApiData(apidata.data.result);
 
-      if (!apidata.data.estPrice) {
+      if (!apidata.data.status) {
         setApiData({
-          estPrice: '0 No price available for this region yet',
-          estPriceAnnual: '0 No data available for this region yet',
+          estPrice: "0 No price available for this region yet",
+          estPriceAnnual: "0 No data available for this region yet",
         });
       }
     } catch (error) {
