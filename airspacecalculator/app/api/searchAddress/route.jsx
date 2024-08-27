@@ -1,23 +1,21 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { revalidatePath } from 'next/cache';
-import axios from 'axios';
+import axios from "axios";
+import { revalidatePath } from "next/cache";
+import { NextResponse } from "next/server";
 
 export async function GET(request) {
   revalidatePath(request.url);
 
   try {
-    const uri = request.headers.get('uri');
-    console.log({ uri });
+    const uri = request.headers.get("uri");
     const skyTradeApiUrl = `http://dev-api.sky.trade/api/proxy?${Date.now()}`;
 
     const apiData = await axios.get(skyTradeApiUrl, {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         uri,
-        api_key: 'XXX',
+        api_key: "XXX",
       },
     });
-    console.log({ apiData }, 'data');
     return NextResponse.json(
       {},
       {
@@ -25,7 +23,6 @@ export async function GET(request) {
       }
     );
   } catch (error) {
-    console.log(error);
     return NextResponse.json(
       { error },
       {
