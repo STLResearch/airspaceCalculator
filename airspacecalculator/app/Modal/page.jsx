@@ -41,6 +41,14 @@ function Modal() {
         },
       });
 
+      setCoordinates([
+        {
+          longitude: addresses[0].center[0],
+          latitude: addresses[0].center[1],
+          placeName: addresses[0].place_name,
+        },
+      ]);
+
       setApiData(apidata.data.result);
 
       if (!apidata.data.status) {
@@ -49,14 +57,6 @@ function Modal() {
           estPriceAnnual: "0 No data available for this region yet",
         });
       }
-
-      setCoordinates([
-        {
-          longitude: addresses[0].center[0],
-          latitude: addresses[0].center[1],
-          placeName: addresses[0].place_name,
-        },
-      ]);
     } catch (error) {}
   };
 
