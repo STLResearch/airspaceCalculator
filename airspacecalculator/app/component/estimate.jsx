@@ -1,17 +1,34 @@
 'use client';
 import Image from 'next/image';
 import Modal from '../Modal/page';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+function roundUpToTwoDecimals(num) {
+  return Math.ceil(num * 100) / 100;
+}
 
 function Estimate({ apidata, address }) {
   const [startAffresh, setStartAffresh] = useState(false);
-  if (!apidata.estPrice) {
-    apidata.estPrice = 'Price not available';
-    apidata.estPriceAnnual = 'Price not available';
+
+  const [apiDataParam, setApiDataParam] = useState({ apidata });
+
+  if (!apiDataParam.date) {
+    apiDataParam.estPrice = 'Price not available';
+    apiDataParam.estPriceAnnual = 'Price not available';
   } else {
-    apidata.estPrice = parseInt(apidata.estPrice).toFixed(2);
-    apidata.estPriceAnnual = parseFloat(apidata.estPriceAnnual).toFixed(2);
+    apiDataParam.estPrice = parseInt(apiDataParam.estPrice);
+    apiDataParam.estPriceAnnual = roundUpToTwoDecimals(
+      apiDataParam.estPriceAnnual
+    );
+    apiDataParam.estPriceAnnual = parseInt(apiDataParam.estPriceAnnual);
+    apiDataParam.estPriceAnnual = roundUpToTwoDecimals(
+      apiDataParam.estPriceAnnual
+    );
   }
+
+  useEffect(() => {
+    setApiDataParam(apidata);
+  }, [apidata]);
 
   const handleClick = () => {
     setStartAffresh(true);
@@ -52,7 +69,7 @@ function Estimate({ apidata, address }) {
             <h2 className="font-bold mb-2 text-[20px]">
               Est. Price Per Square Foot
             </h2>
-            <h2 className="font-bold">{`$${apidata.estPrice}`}</h2>
+            <h2 className="font-bold">{`$${apiDataParam.estPrice}`}</h2>
           </div>
         </div>
         <div className="flex items-center  bg-[#DEE9F8]  p-2 rounded-xl annual-income w-full">
@@ -65,7 +82,7 @@ function Estimate({ apidata, address }) {
           />
           <div>
             <h2 className="font-bold mb-2"> Est.Annual Passive Income </h2>
-            <h2 className="font-bold">{`$${apidata.estPriceAnnual}`}</h2>
+            <h2 className="font-bold">{`$${apiDataParam.estPriceAnnual}`}</h2>
           </div>
         </div>
         <button className="w-full bg-[#1470FF] text-[15px] rounded-lg py-2 text-[#ffffff]">
