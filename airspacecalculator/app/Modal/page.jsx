@@ -9,6 +9,7 @@ function Modal() {
   const [address, setAddress] = React.useState("");
   const [addresses, setAddresses] = React.useState([]);
   const [showOptions, setShowOptions] = React.useState(false);
+  const [loadingEstimate, setLoadingEstimate] = React.useState(false);
   const [showEstimateModal, setShowEstimateModal] = React.useState(false);
   const [coordinates, setCoordinates] = React.useState([]);
 
@@ -16,7 +17,6 @@ function Modal() {
     estPrice: "",
     estPriceAnnual: "",
   }); // new object from skytrade api
-  const timeNow = Date.now();
   const handleChangeAddress = (value) => {
     setAddress(value);
     setShowOptions(true);
@@ -27,7 +27,20 @@ function Modal() {
     setShowOptions(false);
   };
 
+  const handleReEstimate = () => {
+    setAddress("");
+    setAddresses([]);
+    setCoordinates([]);
+    setApiData({
+      estPrice: "",
+      estPriceAnnual: "",
+    });
+    setShowEstimateModal(false);
+  };
+
   const getSkyTradeData = async () => {
+    setLoadingEstimate(true);
+
     try {
       const encodedAddress = encodeURIComponent(address);
       const skyTradeApiUrl = `${process.env.NEXT_PUBLIC_API_URL}/air-rights/search/address?address=${encodedAddress}`;
@@ -49,6 +62,8 @@ function Modal() {
           estPriceAnnual: "0 No data available for this region yet",
         });
       }
+
+      setLoadingEstimate(false);
     } catch (error) {}
   };
 
@@ -136,9 +151,20 @@ function Modal() {
             </div>
           </div>
         ) : (
-          showEstimateModal && <Estimate address={address} apidata={apidata} />
+          showEstimateModal && (
+            <Estimate
+              address={address}
+              apidata={apidata}
+              loading={loadingEstimate}
+              onReEstimate={handleReEstimate}
+            />
+          )
         )}
-        <Map coordinates={coordinates} />
+        <Map
+          coordinates={coordinates}
+          apidata={apidata}
+          loading={loadingEstimate}
+        />
       </div>
     </>
   );

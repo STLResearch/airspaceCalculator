@@ -1,20 +1,17 @@
-'use client';
-import Image from 'next/image';
-import Modal from '../Modal/page';
-import { useEffect, useState } from 'react';
+"use client";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
 function roundUpToTwoDecimals(num) {
   return Math.ceil(num * 100) / 100;
 }
 
-function Estimate({ apidata, address }) {
-  const [startAffresh, setStartAffresh] = useState(false);
-
+function Estimate({ apidata, address, loading, onReEstimate }) {
   const [apiDataParam, setApiDataParam] = useState({ apidata });
 
   if (!apiDataParam.date) {
-    apiDataParam.estPrice = 'Price not available';
-    apiDataParam.estPriceAnnual = 'Price not available';
+    apiDataParam.estPrice = "Price not available";
+    apiDataParam.estPriceAnnual = "Price not available";
   } else {
     apiDataParam.estPrice = parseInt(apiDataParam.estPrice);
     apiDataParam.estPriceAnnual = roundUpToTwoDecimals(
@@ -30,19 +27,15 @@ function Estimate({ apidata, address }) {
     setApiDataParam(apidata);
   }, [apidata]);
 
-  const handleClick = () => {
-    setStartAffresh(true);
-  };
+  const addressLine1 = address.split(",").shift();
+  [, ...address] = address.split(",");
 
-  const addressLine1 = address.split(',').shift();
-  [, ...address] = address.split(',');
-
-  return !startAffresh ? (
+  return (
     <div className="flex flex-wrap items-start my-16 w-full">
       <div className="bg-[#FFFFFF] rounded-xl px-10 h-[512px] gap-4 flex flex-col items-center justify-center">
         <div className="flex items-center">
           <Image
-            src={'/location-point.svg'}
+            src={"/location-point.svg"}
             alt="circle"
             width={39}
             height={39}
@@ -59,7 +52,7 @@ function Estimate({ apidata, address }) {
         </div>
         <div className="flex items-center  border bg-[#DEE9F8] p-2 rounded-xl square-foot w-full">
           <Image
-            src={'/building.svg'}
+            src={"/building.svg"}
             alt="building"
             width={39}
             height={39}
@@ -69,12 +62,14 @@ function Estimate({ apidata, address }) {
             <h2 className="font-bold mb-2 text-[20px]">
               Est. Price Per Square Foot
             </h2>
-            <h2 className="font-bold">{`$${apiDataParam.estPrice}`}</h2>
+            <h2 className="font-bold">
+              {loading ? "Fetching prices..." : `$${apiDataParam.estPrice}`}
+            </h2>
           </div>
         </div>
         <div className="flex items-center  bg-[#DEE9F8]  p-2 rounded-xl annual-income w-full">
           <Image
-            src={'/circle-dollar.svg'}
+            src={"/circle-dollar.svg"}
             alt="circle"
             width={39}
             height={39}
@@ -82,7 +77,11 @@ function Estimate({ apidata, address }) {
           />
           <div>
             <h2 className="font-bold mb-2"> Est.Annual Passive Income </h2>
-            <h2 className="font-bold">{`$${apiDataParam.estPriceAnnual}`}</h2>
+            <h2 className="font-bold">
+              {loading
+                ? "Fetching prices..."
+                : `$${apiDataParam.estPriceAnnual}`}
+            </h2>
           </div>
         </div>
         <button className="w-full bg-[#1470FF] text-[15px] rounded-lg py-2 text-[#ffffff]">
@@ -97,15 +96,13 @@ function Estimate({ apidata, address }) {
         </button>
 
         <button
-          onClick={() => handleClick()}
+          onClick={() => onReEstimate()}
           className="w-full border-[2px] text-[15px] text-[#1470FF] rounded-lg border border-[#1470FF] py-2"
         >
           Estimate Another Airspace
         </button>
       </div>
     </div>
-  ) : (
-    startAffresh && <Modal />
   );
 }
 
