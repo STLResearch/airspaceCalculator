@@ -4,7 +4,7 @@ import { useState } from "react";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import Pin from "./Pin";
 
-const Map = ({ coordinates }) => {
+const Map = ({ coordinates, apidata, loading }) => {
   const [popupInfo, setPopupInfo] = useState(null);
 
   return (
@@ -39,15 +39,22 @@ const Map = ({ coordinates }) => {
         </Marker>
       ))}
 
-      {popupInfo && (
+      {coordinates.length > 0 && popupInfo && (
         <Popup
           anchor="top"
           longitude={Number(popupInfo.longitude)}
           latitude={Number(popupInfo.latitude)}
           onClose={() => setPopupInfo(null)}
         >
+          <div>{popupInfo.placeName}</div>
+          <br />
+
           <div>
-            {popupInfo.placeName}, {popupInfo.state}
+            The Air Rights price is estimated to be{" "}
+            <span className="font-bold">${apidata.estPrice}</span>. You can
+            expect to make{" "}
+            <span className="font-bold">${apidata.estPriceAnnual}</span> in
+            passive income annually.
           </div>
         </Popup>
       )}
