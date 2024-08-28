@@ -1,68 +1,57 @@
-'use client';
-import { useEffect, useRef, useState, useCallback } from 'react';
-import mapboxgl from 'mapbox-gl';
-import ReactMapGL from 'react-map-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+"use client";
+import "mapbox-gl/dist/mapbox-gl.css";
+import { useState } from "react";
+import ReactMapGL, { Marker, Popup } from "react-map-gl";
+import Pin from "./pin";
 
 const Map = ({ coordinates }) => {
-  const mapContainerRef = useRef(null);
-  const [map, setMap] = useState(null);
-  const [viewport, setViewPort] = useState({
-    latitude: coordinates[0],
-    longitude: coordinates[1],
-    zoom: 11,
-  });
-
-  console.log(viewport, 'viewport');
-
-  useEffect(() => {
-    if (mapContainerRef.current) {
-      const map = new mapboxgl.Map({
-        container: mapContainerRef.current,
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: [viewport.latitude, viewport.longitude],
-        zoom: 11,
-        accessToken: process.env.NEXT_PUBLIC_MAPBOX_TOKEN,
-      });
-
-      return () => map.remove();
-    }
-  }, [coordinates, viewport.longitude, viewport.latitude]);
-
-  const accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
-
-  const changeCordinates = useCallback(({ viewport }) => {
-    const newCenter = [viewport.longitude, viewport.latitude];
-    setViewPort({
-      ...viewport,
-      longitude: newCenter[0],
-      latitude: newCenter[1],
-      zoom: 9,
-    });
-  }, []);
+  const [popupInfo, setPopupInfo] = useState(null);
 
   return (
-    <>
-      {' '}
-      <div className="w-full h-screen m-[1rem]  " ref={mapContainerRef}>
-        <ReactMapGL
-          onviewportChange={(nextViewport) => setViewPort(nextViewport)}
-          mapboxAccessToken={accessToken}
-          changeCordinates={(viewport) =>
-            setViewPort(changeCordinates(viewport))
-          }
-          width="100vh"
-          heigth="100vh"
-          mapStyle={'mapbox://styles/mapbox/streets-v11'}
-        />
-      </div>
-      <div
-        className="map-container"
-        ref={mapContainerRef}
-        map={map}
-        style={{ height: '100vh' }}
-      ></div>
-    </>
+    <ReactMapGL
+      initialViewState={{
+        zoom: 3.5,
+        bearing: 0,
+        pitch: 0,
+      }}
+      longitude={coordinates.length > 0 ? coordinates[0].longitude : -100}
+      latitude={coordinates.length > 0 ? coordinates[0].latitude : 40}
+      zoom={coordinates.length > 0 ? 11 : 4}
+      mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+      width="100%"
+      heigth="100%"
+      mapStyle={"mapbox://styles/mapbox/streets-v11"}
+    >
+      {coordinates.map((city, index) => (
+        <Marker
+          key={`marker-${index}`}
+          longitude={city.longitude}
+          latitude={city.latitude}
+          anchor="bottom"
+          onClick={(e) => {
+            // If we let the click event propagates to the map, it will immediately close the popup
+            // with `closeOnClick: true`
+            e.originalEvent.stopPropagation();
+            setPopupInfo(city);
+          }}
+        >
+          <Pin size={30} />
+        </Marker>
+      ))}
+
+      {popupInfo && (
+        <Popup
+          anchor="top"
+          longitude={Number(popupInfo.longitude)}
+          latitude={Number(popupInfo.latitude)}
+          onClose={() => setPopupInfo(null)}
+        >
+          <div>
+            {popupInfo.placeName}, {popupInfo.state}
+          </div>
+        </Popup>
+      )}
+    </ReactMapGL>
   );
 };
 
