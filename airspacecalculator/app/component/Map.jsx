@@ -2,7 +2,7 @@
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useState } from "react";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
-import Pin from "./pin";
+import Pin from "./Pin";
 
 const Map = ({ coordinates }) => {
   const [popupInfo, setPopupInfo] = useState(null);
