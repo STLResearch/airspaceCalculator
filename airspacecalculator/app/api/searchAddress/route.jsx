@@ -7,9 +7,7 @@ export async function GET(request) {
 
   try {
     const uri = request.headers.get("uri");
-    const skyTradeApiUrl = `${
-      process.env.NEXT_PUBLIC_API_URL
-    }/api/proxy?${Date.now()}`;
+    const skyTradeApiUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
 
     const apiData = await axios.get(skyTradeApiUrl, {
       headers: {
