@@ -30,16 +30,8 @@ function Modal() {
   const getSkyTradeData = async () => {
     try {
       const encodedAddress = encodeURIComponent(address);
-      const skyTradeApiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/proxy/${timeNow}`;
-      const skyTradeUrl = `/air-rights/search/address?address=${encodedAddress}`;
-
-      const apidata = await axios.get(skyTradeApiUrl, {
-        headers: {
-          "Content-Type": "application/json",
-          uri: skyTradeUrl,
-          api_key: "XXX",
-        },
-      });
+      const skyTradeApiUrl = `${process.env.NEXT_PUBLIC_API_URL}/air-rights/search/address?address=${encodedAddress}`;
+      const apidata = await axios.get(skyTradeApiUrl);
 
       setCoordinates([
         {
