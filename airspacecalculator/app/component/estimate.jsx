@@ -2,29 +2,15 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-function roundUpToTwoDecimals(num) {
-  return Math.ceil(num * 100) / 100;
-}
-
 function Estimate({ apidata, address, loading, onReEstimate }) {
-  const [apiDataParam, setApiDataParam] = useState({ apidata });
-
-  if (!apiDataParam.date) {
-    apiDataParam.estPrice = "Price not available";
-    apiDataParam.estPriceAnnual = "Price not available";
-  } else {
-    apiDataParam.estPrice = parseInt(apiDataParam.estPrice);
-    apiDataParam.estPriceAnnual = roundUpToTwoDecimals(
-      apiDataParam.estPriceAnnual
-    );
-    apiDataParam.estPriceAnnual = parseInt(apiDataParam.estPriceAnnual);
-    apiDataParam.estPriceAnnual = roundUpToTwoDecimals(
-      apiDataParam.estPriceAnnual
-    );
-  }
+  const [apiData, setApiData] = useState([]);
+  const [mainEstimate, setMainEstimate] = useState([]);
+  const [isEstimateAvailable, setIsEstimateAvailable] = useState([]);
 
   useEffect(() => {
-    setApiDataParam(apidata);
+    setApiData(apidata || []);
+    setMainEstimate(apidata.find((d) => d.isMain));
+    setIsEstimateAvailable(apidata.find((d) => d.isMain) !== undefined);
   }, [apidata]);
 
   const addressLine1 = address.split(",").shift();
@@ -63,7 +49,13 @@ function Estimate({ apidata, address, loading, onReEstimate }) {
               Est. Price Per Square Foot
             </h2>
             <h2 className="font-bold">
-              {loading ? "Fetching prices..." : `$${apiDataParam.estPrice}`}
+              {loading
+                ? "Fetching prices..."
+                : `${
+                    isEstimateAvailable
+                      ? `$${Number(mainEstimate.estimate.value).toFixed(2)}`
+                      : "Unavailable"
+                  }`}
             </h2>
           </div>
         </div>
@@ -80,7 +72,13 @@ function Estimate({ apidata, address, loading, onReEstimate }) {
             <h2 className="font-bold">
               {loading
                 ? "Fetching prices..."
-                : `$${apiDataParam.estPriceAnnual}`}
+                : `${
+                    isEstimateAvailable
+                      ? `$${Number(
+                          mainEstimate.estimate.annualProjection
+                        ).toFixed(2)}`
+                      : "Unavailable"
+                  }`}
             </h2>
           </div>
         </div>
@@ -97,7 +95,7 @@ function Estimate({ apidata, address, loading, onReEstimate }) {
 
         <button
           onClick={() => onReEstimate()}
-          className="w-full border-[2px] text-[15px] text-[#1470FF] rounded-lg border border-[#1470FF] py-2"
+          className="w-full text-[15px] text-[#1470FF] rounded-lg border border-[#1470FF] py-2"
         >
           Estimate Another Airspace
         </button>

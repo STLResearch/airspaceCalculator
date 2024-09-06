@@ -1,0 +1,5 @@
+runtime: nodejs20
+
+env_variables:
+  NEXT_PUBLIC_MAPBOX_TOKEN: ""
+  NEXT_PUBLIC_API_URL: ""

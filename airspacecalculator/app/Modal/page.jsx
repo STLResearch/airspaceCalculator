@@ -11,12 +11,10 @@ function Modal() {
   const [showOptions, setShowOptions] = React.useState(false);
   const [loadingEstimate, setLoadingEstimate] = React.useState(false);
   const [showEstimateModal, setShowEstimateModal] = React.useState(false);
-  const [coordinates, setCoordinates] = React.useState([]);
 
-  const [apidata, setApiData] = React.useState({
-    estPrice: "",
-    estPriceAnnual: "",
-  }); // new object from skytrade api
+  const [apidata, setApiData] = React.useState([]);
+  const [apiError, setApiError] = React.useState("");
+
   const handleChangeAddress = (value) => {
     setAddress(value);
     setShowOptions(true);
@@ -30,11 +28,7 @@ function Modal() {
   const handleReEstimate = () => {
     setAddress("");
     setAddresses([]);
-    setCoordinates([]);
-    setApiData({
-      estPrice: "",
-      estPriceAnnual: "",
-    });
+    setApiData([]);
     setShowEstimateModal(false);
   };
 
@@ -46,21 +40,12 @@ function Modal() {
       const skyTradeApiUrl = `${process.env.NEXT_PUBLIC_API_URL}/air-rights/search/address?address=${encodedAddress}`;
       const apidata = await axios.get(skyTradeApiUrl);
 
-      setCoordinates([
-        {
-          longitude: addresses[0].center[0],
-          latitude: addresses[0].center[1],
-          placeName: addresses[0].place_name,
-        },
-      ]);
-
-      setApiData(apidata.data.result);
-
       if (!apidata.data.status) {
-        setApiData({
-          estPrice: "0 No price available for this region yet",
-          estPriceAnnual: "0 No data available for this region yet",
-        });
+        setApiError(apidata.data.message);
+        setApiData([]);
+      } else {
+        setApiError("");
+        setApiData(apidata.data.result);
       }
 
       setLoadingEstimate(false);
@@ -160,11 +145,7 @@ function Modal() {
             />
           )
         )}
-        <Map
-          coordinates={coordinates}
-          apidata={apidata}
-          loading={loadingEstimate}
-        />
+        <Map coordinates={apidata} />
       </div>
     </>
   );
