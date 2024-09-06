@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -18,16 +19,11 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "components/*": ["app/components/*"],
+      "lib/*": ["app/lib/*"],
+      "styles/*": ["app/styles/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "app/Modal/page.jsx",
-    "app/Estimate/estimate.jsx"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }

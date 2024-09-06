@@ -1,35 +1,37 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
 import localFont from 'next/font/local';
-import Image from 'next/image';
-import logo from '../public/background.svg';
+import 'styles/globals.css';
 
 const campton = localFont({
   variable: '--font-campton',
   src: [
     {
-      path: './fonts/campton/CamptonBold.otf',
+      path: './fonts/CamptonBold.otf',
       weight: '700',
       style: 'normal',
     },
     {
-      path: './fonts/campton/CamptonMedium.otf',
+      path: './fonts/CamptonBook.otf',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: './fonts/CamptonMedium.otf',
       weight: '500',
       style: 'normal',
     },
     {
-      path: './fonts/campton/CamptonLight.otf',
-      weight: '300',
+      path: './fonts/CamptonSemiBold.otf',
+      weight: '600',
       style: 'normal',
     },
   ],
 });
 
 export const metadata: Metadata = {
-  title: 'Airspace calculator',
+  title: 'SkyTrade - Air Rights Calculator',
   description:
-    'Airspace calculator for getting an estimate for airspace cost on a location',
+    'SkyTrade lets you monetize your airspace, the legal right to use and control the space above buildings and land.',
 };
 
 export default function RootLayout({
@@ -38,8 +40,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={campton.variable}>{children}</body>
+    <html lang="en" className={`${campton.variable}`}>
+      <body>{children}</body>
     </html>
   );
 }

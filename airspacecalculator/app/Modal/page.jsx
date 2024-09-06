@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import React from "react";
-import axios from "axios";
-import Estimate from "../component/estimate";
-import Map from "../component/Map";
+import React from 'react';
+import axios from 'axios';
+import Estimate from '../component/estimate';
+import Map from '../component/Map';
 
 function Modal() {
-  const [address, setAddress] = React.useState("");
+  const [address, setAddress] = React.useState('');
   const [addresses, setAddresses] = React.useState([]);
   const [showOptions, setShowOptions] = React.useState(false);
   const [loadingEstimate, setLoadingEstimate] = React.useState(false);
   const [showEstimateModal, setShowEstimateModal] = React.useState(false);
 
   const [apidata, setApiData] = React.useState([]);
-  const [apiError, setApiError] = React.useState("");
+  const [apiError, setApiError] = React.useState('');
 
   const handleChangeAddress = (value) => {
     setAddress(value);
@@ -26,7 +26,7 @@ function Modal() {
   };
 
   const handleReEstimate = () => {
-    setAddress("");
+    setAddress('');
     setAddresses([]);
     setApiData([]);
     setShowEstimateModal(false);
@@ -44,7 +44,7 @@ function Modal() {
         setApiError(apidata.data.message);
         setApiData([]);
       } else {
-        setApiError("");
+        setApiError('');
         setApiData(apidata.data.result);
       }
 
@@ -64,7 +64,7 @@ function Modal() {
 
           const response = await fetch(mapboxGeocodingUrl);
 
-          if (!response.ok) throw new Error("Error while getting addresses");
+          if (!response.ok) throw new Error('Error while getting addresses');
 
           const data = await response.json();
           if (data.features && data.features.length > 0) {
@@ -84,15 +84,15 @@ function Modal() {
   return (
     <>
       <div className="container flex h-screen items-center justify-between md:p-24 p-7 ">
-        {" "}
+        {' '}
         {!showEstimateModal ? (
           <div className="bg-white shadow-md rounded-[12px] md:p-12 p-5  mx-auto  w-full">
             <h2 className="text-[2.625rem] text-center text-[campton] text-[#0E2B56] font-medium mb-4 tracking-[-.1rem]">
               How much is my airspace worth?
             </h2>
             <p className="text-center text-gray-600 mb-12 h-[60px] leading-[30px]">
-              Use our airspace value estimator to get a free, instant
-              airspace-value estimate, see nearby airspaces and market trends.
+              Use our airspace value estimator to get a free, instant airspace-value estimate, see nearby airspaces and
+              market trends.
             </p>
             <div className="relative w-full md:w-[90%] my-auto mx-auto flex flex-col gap-[10px]">
               <input
@@ -114,7 +114,7 @@ function Modal() {
                         onClick={() => handleSelectAddress(item.place_name)}
                         className="w-full rounded-xl p-5 text-left text-[#222222] hover:bg-gray-500 cursor-pointer hover:text-white mb-2"
                         style={{
-                          borderTop: "0.2px solid #222222",
+                          borderTop: '0.2px solid #222222',
                         }}
                       >
                         {item.place_name}
@@ -137,12 +137,7 @@ function Modal() {
           </div>
         ) : (
           showEstimateModal && (
-            <Estimate
-              address={address}
-              apidata={apidata}
-              loading={loadingEstimate}
-              onReEstimate={handleReEstimate}
-            />
+            <Estimate address={address} apidata={apidata} loading={loadingEstimate} onReEstimate={handleReEstimate} />
           )
         )}
         <Map coordinates={apidata} />
