@@ -1,10 +1,12 @@
-import Icon from 'components/Icon';
+import Card from 'components/Card';
+import Search from 'components/Search';
+import SearchResult from 'components/SearchResult';
 
 export default function Page() {
   return (
-    <h1 className="text-3xl font-bold text-blue underline">
-      Hello, Next.js!
-      <Icon name="launch" customSize="w-8 h-8" />
-    </h1>
+    <Card>
+      <Search />
+      <SearchResult address="116 Elm Street" placeName="New York, New York, United States" />
+    </Card>
   );
 }

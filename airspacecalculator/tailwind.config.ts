@@ -18,6 +18,7 @@ const config: Config = {
       blue: '#1470FF',
       navy: '#0E2B56',
       sky: '#DEE9F8',
+      icon: '#222222',
     },
     borderRadius: {
       none: '0',
