@@ -1,10 +1,11 @@
 import { useAirRights } from './AirRightsProvider';
+import Card from './Card';
 
 const defaultClassNames =
   'w-full p-3 rounded bg-grey text-black focus:outline-none focus:ring-1 focus:ring-sky';
 
 function AddressInput() {
-  const { rawAddress, updateRawAddress } = useAirRights();
+  const { rawAddress, updateRawAddress, addressSuggestions } = useAirRights();
 
   const handleInputChange = (v: string) => {
     updateRawAddress(v);
@@ -25,7 +26,23 @@ function AddressInput() {
           className={defaultClassNames}
         />
 
-        {/* <Card classNames="absolute bg-white w-full top-14">Meee</Card> */}
+        {rawAddress !== '' && addressSuggestions.length > 0 && (
+          <Card
+            paddingStyle="none"
+            classNames="absolute rounded-lg w-full max-h-[400px] top-14"
+          >
+            {addressSuggestions.map((s, i) => (
+              <div
+                key={i}
+                className={`p-2 ${i !== addressSuggestions.length - 1 ? 'border-b' : ''} border-b-grey cursor-pointer hover:bg-grey`}
+              >
+                <div className="flex items-center">
+                  <span className="text-sm">{s.place_name}</span>
+                </div>
+              </div>
+            ))}
+          </Card>
+        )}
       </div>
     </div>
   );

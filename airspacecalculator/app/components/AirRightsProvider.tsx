@@ -1,10 +1,17 @@
 'use client';
 
 import axios from 'axios';
-import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 interface IAirRightsContext {
   rawAddress: string;
+  addressSuggestions: any[];
   loading: boolean;
   data: any;
   updateRawAddress: (address: string) => void;
@@ -14,6 +21,7 @@ interface IAirRightsContext {
 
 const Context = createContext<IAirRightsContext>({
   rawAddress: '',
+  addressSuggestions: [],
   data: undefined,
   loading: false,
   updateRawAddress: () => null,
@@ -26,6 +34,7 @@ export const useAirRights = (): IAirRightsContext =>
 
 function AirRightsProvider(props: PropsWithChildren) {
   const [rawAddress, setRawAddress] = useState('');
+  const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>(undefined);
 
@@ -62,10 +71,43 @@ function AirRightsProvider(props: PropsWithChildren) {
     setRawAddress('');
   };
 
+  useEffect(() => {
+    async function getAddressSuggestions() {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_MAPBOX_API_URL}/${encodeURIComponent(
+            rawAddress
+          )}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`
+        );
+
+        const dataFeatures = response.data.features;
+
+        if (dataFeatures && dataFeatures.length > 0) {
+          setAddressSuggestions(dataFeatures);
+        }
+      } catch (error) {
+        setAddressSuggestions([]);
+      }
+    }
+
+    const handler = setTimeout(async () => {
+      if (rawAddress !== '') {
+        await getAddressSuggestions();
+      } else {
+        setAddressSuggestions([]);
+      }
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [rawAddress]);
+
   return (
     <Context.Provider
       value={{
         rawAddress,
+        addressSuggestions,
         loading,
         data,
         updateRawAddress,
