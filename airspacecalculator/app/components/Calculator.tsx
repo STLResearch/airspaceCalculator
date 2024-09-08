@@ -1,15 +1,15 @@
 'use client';
 
-import { useAirRights } from 'components/AirRightsProvider';
-import Card from 'components/Card';
-import Search from 'components/Search';
-import SearchResult from 'components/SearchResult';
+import { useAirRights } from './AirRightsProvider';
+import Card from './Card';
+import Search from './Search';
+import SearchResult from './SearchResult';
 
 function Calculator() {
   const { data: airRightsData } = useAirRights();
 
   return (
-    <Card paddingStyle="thin">
+    <Card paddingStyle="thin" classNames="rounded-xl">
       {airRightsData ? <SearchResult /> : <Search />}
     </Card>
   );
