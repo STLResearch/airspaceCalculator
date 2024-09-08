@@ -11,7 +11,7 @@ export default function Page() {
       <AirRightsProvider>
         <Map />
 
-        <div className="absolute">
+        <div className="absolute w-full sm:w-auto sm:top-1/2 sm:-mt-[250px] sm:left-4">
           <Calculator />
         </div>
       </AirRightsProvider>

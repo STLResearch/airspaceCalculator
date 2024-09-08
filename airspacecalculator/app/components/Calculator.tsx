@@ -9,7 +9,7 @@ function Calculator() {
   const { data: airRightsData } = useAirRights();
 
   return (
-    <Card paddingStyle="thin" classNames="rounded-xl">
+    <Card paddingStyle="thin" classNames="sm:rounded-xl sm:w-[450px]">
       {airRightsData ? <SearchResult /> : <Search />}
     </Card>
   );
