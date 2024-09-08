@@ -1,28 +1,32 @@
-import { PropsWithChildren } from 'react';
-
 interface IButtonProps {
   classNames?: string;
   label: string;
   variant?: 'primary' | 'secondary' | 'tertiary';
   disabled?: boolean;
+  progress?: boolean;
   href?: string;
   onClick?: () => any;
-  children?: React.ReactNode;
 }
 
 const defaultClassNames =
   'w-full p-3 rounded-lg flex items-center justify-center focus:outline-none';
 
-function Button(props: PropsWithChildren<IButtonProps>) {
-  let style = defaultClassNames;
+function getButtonStyle(props: IButtonProps) {
+  if (props.disabled || props.progress) {
+    return `bg-disabled text-grey ${props.progress ? 'animate-pulse' : ''}`;
+  }
 
   if (props.variant === 'primary') {
-    style += ' bg-blue text-white';
+    return 'bg-blue text-white';
   } else if (props.variant === 'secondary') {
-    style += ' bg-navy text-white';
-  } else {
-    style += ' bg-transparent border border-blue text-blue';
+    return 'bg-navy text-white';
+  } else if (props.variant === 'tertiary') {
+    return 'bg-transparent border border-blue text-blue';
   }
+}
+
+function Button(props: IButtonProps) {
+  const style = getButtonStyle(props);
 
   const handleClick = () => {
     if (props.href) {
@@ -37,7 +41,7 @@ function Button(props: PropsWithChildren<IButtonProps>) {
 
   return (
     <button
-      className={`${props.classNames} ${style}`}
+      className={`${defaultClassNames} ${style} ${props.classNames} ${style}`}
       type="button"
       disabled={props.disabled}
       onClick={handleClick}

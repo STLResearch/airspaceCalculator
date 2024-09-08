@@ -1,12 +1,10 @@
-import Card from 'components/Card';
-import Search from 'components/Search';
-import SearchResult from 'components/SearchResult';
+import AirRightsProvider from 'components/AirRightsProvider';
+import Calculator from 'components/Calculator';
 
 export default function Page() {
   return (
-    <Card>
-      <Search />
-      <SearchResult address="116 Elm Street" placeName="New York, New York, United States" />
-    </Card>
+    <AirRightsProvider>
+      <Calculator />
+    </AirRightsProvider>
   );
 }

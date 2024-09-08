@@ -1,25 +1,31 @@
 'use client';
-import { PropsWithChildren } from 'react';
+
+import AddressInput from './AddressInput';
+import { useAirRights } from './AirRightsProvider';
 import Button from './Button';
 
-interface ISearchProps {}
+function Search() {
+  const { loading, rawAddress, getAirRightEstimates } = useAirRights();
 
-function Search(props: PropsWithChildren<ISearchProps>) {
   return (
     <div className="flex flex-col">
-      <h2 className="text-xl font-medium text-navy">How much is my airspace worth?</h2>
-      <span className="text-sm mt-2">
-        Use our airspace value estimator to get a free, instant airspace-value estimate, including
-        nearby airspaces and market trends.
+      <h2 className="text-xl font-medium text-navy">
+        How much is my airspace worth?
+      </h2>
+      <span className="text-sm mt-2 mb-4">
+        Use our airspace value estimator to get a free, instant airspace-value
+        estimate, including nearby airspaces and market trends.
       </span>
+
+      <AddressInput />
 
       <Button
         variant="primary"
-        label="Estimate my airspace"
+        label="Estimate airspace"
         classNames="mt-4"
-        onClick={() => {
-          console.log('njnmmn');
-        }}
+        progress={loading}
+        disabled={loading || !rawAddress}
+        onClick={getAirRightEstimates}
       />
     </div>
   );

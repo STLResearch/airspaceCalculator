@@ -19,6 +19,8 @@ const config: Config = {
       navy: '#0E2B56',
       sky: '#DEE9F8',
       icon: '#222222',
+      grey: '#ECECEC',
+      disabled: '#939393',
     },
     borderRadius: {
       none: '0',
@@ -45,8 +47,7 @@ const config: Config = {
     },
     extend: {
       boxShadow: {
-        lg: '0 0 20px 0 rgba(0 0 0 / 5%)',
-        '3xl': '0 10px 30px 0 rgba(0 0 0 / 10%)',
+        card: '0 10px 30px 0 rgba(0 0 0 / 10%)',
       },
     },
   },

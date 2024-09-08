@@ -1,11 +1,10 @@
-import { PropsWithChildren } from 'react';
 import Icon from './Icon';
 
 interface ILocationPinProps {
   variant: 'primary' | 'secondary' | 'outline';
 }
 
-function LocationPin(props: PropsWithChildren<ILocationPinProps>) {
+function LocationPin(props: ILocationPinProps) {
   let iconFill = 'fill-none';
   if (props.variant === 'primary') {
     iconFill = 'fill-navy';
@@ -13,7 +12,8 @@ function LocationPin(props: PropsWithChildren<ILocationPinProps>) {
     iconFill = 'fill-sky';
   }
 
-  const iconStroke = props.variant === 'outline' ? 'stroke-icon' : 'stroke-white';
+  const iconStroke =
+    props.variant === 'outline' ? 'stroke-icon' : 'stroke-white';
 
   return (
     <Icon

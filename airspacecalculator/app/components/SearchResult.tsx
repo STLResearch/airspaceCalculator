@@ -1,18 +1,21 @@
 'use client';
 
+import { useAirRights } from './AirRightsProvider';
 import Button from './Button';
 import LocationPin from './LocationPin';
 import SearchResultMetadata from './SearchResultMetadata';
 
-function SearchResult(props: any) {
+function SearchResult() {
+  const { data: airRightsData, rawAddress, clearEstimation } = useAirRights();
+
   return (
     <div className="flex flex-col">
       <div className="flex items-center p-4">
         <LocationPin variant="outline" />
 
         <div className="flex flex-col ml-3">
-          <h3 className="text-lg font-medium text-navy">{props.address}</h3>
-          <span className="text-sm text-navy">{props.placeName}</span>
+          <h3 className="text-lg font-medium text-navy">116 6th Ave.</h3>
+          <span className="text-sm text-navy">New York, United States</span>
         </div>
       </div>
 
@@ -20,14 +23,14 @@ function SearchResult(props: any) {
         <SearchResultMetadata
           icon="buildings"
           title="Estimated price per square foot"
-          value="$50"
+          value={airRightsData.main.estimate.value}
         />
       </div>
 
       <SearchResultMetadata
         icon="priceCoin"
         title="Estimated annual passive income"
-        value="$1000"
+        value={airRightsData.main.estimate.annualProjection}
       />
 
       <div className="flex flex-col gap-3 mt-4">
@@ -40,10 +43,17 @@ function SearchResult(props: any) {
         <Button
           variant="secondary"
           label="Claim my airspace"
-          href={`${process.env.NEXT_PUBLIC_AIRSPACE_CLAIM_URL}?propertyAddress=${props.address}`}
+          href={
+            `${process.env.NEXT_PUBLIC_AIRSPACE_CLAIM_URL}` +
+            `?propertyAddress=${encodeURIComponent(rawAddress)}`
+          }
         />
 
-        <Button variant="tertiary" label="Estimate another airspace" onClick={() => {}} />
+        <Button
+          variant="tertiary"
+          label="Estimate another airspace"
+          onClick={clearEstimation}
+        />
       </div>
     </div>
   );
