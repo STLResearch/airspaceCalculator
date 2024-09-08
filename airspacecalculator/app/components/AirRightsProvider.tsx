@@ -13,8 +13,10 @@ interface IAirRightsContext {
   rawAddress: string;
   addressSuggestions: any[];
   loading: boolean;
+  ready: boolean;
   data: any;
   updateRawAddress: (address: string) => void;
+  selectAddressSuggestion: (suggestion: string) => void;
   getAirRightEstimates: () => Promise<void>;
   clearEstimation: () => void;
 }
@@ -24,7 +26,9 @@ const Context = createContext<IAirRightsContext>({
   addressSuggestions: [],
   data: undefined,
   loading: false,
+  ready: false,
   updateRawAddress: () => null,
+  selectAddressSuggestion: () => null,
   getAirRightEstimates: async () => undefined,
   clearEstimation: () => null,
 });
@@ -36,10 +40,18 @@ function AirRightsProvider(props: PropsWithChildren) {
   const [rawAddress, setRawAddress] = useState('');
   const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [ready, setReady] = useState(false);
   const [data, setData] = useState<any>(undefined);
 
   const updateRawAddress = (address: string) => {
     setRawAddress(address);
+    setReady(false);
+  };
+
+  const selectAddressSuggestion = (suggestion: string) => {
+    setRawAddress(suggestion);
+    setAddressSuggestions([]);
+    setReady(true);
   };
 
   const getAirRightEstimates = async () => {
@@ -72,6 +84,12 @@ function AirRightsProvider(props: PropsWithChildren) {
   };
 
   useEffect(() => {
+    if (!rawAddress) {
+      setAddressSuggestions([]);
+      setReady(false);
+      return;
+    }
+
     async function getAddressSuggestions() {
       try {
         const response = await axios.get(
@@ -91,11 +109,7 @@ function AirRightsProvider(props: PropsWithChildren) {
     }
 
     const handler = setTimeout(async () => {
-      if (rawAddress !== '') {
-        await getAddressSuggestions();
-      } else {
-        setAddressSuggestions([]);
-      }
+      await getAddressSuggestions();
     }, 500);
 
     return () => {
@@ -109,8 +123,10 @@ function AirRightsProvider(props: PropsWithChildren) {
         rawAddress,
         addressSuggestions,
         loading,
+        ready,
         data,
         updateRawAddress,
+        selectAddressSuggestion,
         getAirRightEstimates,
         clearEstimation,
       }}

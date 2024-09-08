@@ -5,7 +5,7 @@ import { useAirRights } from './AirRightsProvider';
 import Button from './Button';
 
 function Search() {
-  const { loading, rawAddress, getAirRightEstimates } = useAirRights();
+  const { loading, ready, getAirRightEstimates } = useAirRights();
 
   return (
     <div className="flex flex-col">
@@ -24,7 +24,7 @@ function Search() {
         label="Estimate airspace"
         classNames="mt-4"
         progress={loading}
-        disabled={loading || !rawAddress}
+        disabled={loading || !ready}
         onClick={getAirRightEstimates}
       />
     </div>

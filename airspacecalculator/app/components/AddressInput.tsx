@@ -5,7 +5,12 @@ const defaultClassNames =
   'w-full p-3 rounded bg-grey text-black focus:outline-none focus:ring-1 focus:ring-sky';
 
 function AddressInput() {
-  const { rawAddress, updateRawAddress, addressSuggestions } = useAirRights();
+  const {
+    rawAddress,
+    updateRawAddress,
+    addressSuggestions,
+    selectAddressSuggestion,
+  } = useAirRights();
 
   const handleInputChange = (v: string) => {
     updateRawAddress(v);
@@ -35,6 +40,7 @@ function AddressInput() {
               <div
                 key={i}
                 className={`p-2 ${i !== addressSuggestions.length - 1 ? 'border-b' : ''} border-b-grey cursor-pointer hover:bg-grey`}
+                onClick={() => selectAddressSuggestion(s.place_name)}
               >
                 <div className="flex items-center">
                   <span className="text-sm">{s.place_name}</span>

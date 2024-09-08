@@ -8,14 +8,17 @@ import SearchResultMetadata from './SearchResultMetadata';
 function SearchResult() {
   const { data: airRightsData, rawAddress, clearEstimation } = useAirRights();
 
+  const shortAddress = rawAddress.split(',')[0];
+  const addressSuffix = rawAddress.split(',').slice(1).join(',');
+
   return (
     <div className="flex flex-col">
       <div className="flex items-center p-4">
         <LocationPin variant="outline" />
 
         <div className="flex flex-col ml-3">
-          <h3 className="text-lg font-medium text-navy">116 6th Ave.</h3>
-          <span className="text-sm text-navy">New York, United States</span>
+          <h3 className="text-lg font-medium text-navy">{shortAddress}</h3>
+          <span className="text-sm text-navy">{addressSuffix}</span>
         </div>
       </div>
 
