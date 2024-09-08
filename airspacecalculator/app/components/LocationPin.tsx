@@ -2,6 +2,7 @@ import Icon from './Icon';
 
 interface ILocationPinProps {
   variant: 'primary' | 'secondary' | 'outline';
+  customSize?: string;
 }
 
 function LocationPin(props: ILocationPinProps) {
@@ -9,7 +10,7 @@ function LocationPin(props: ILocationPinProps) {
   if (props.variant === 'primary') {
     iconFill = 'fill-navy';
   } else if (props.variant === 'secondary') {
-    iconFill = 'fill-sky';
+    iconFill = 'fill-blue';
   }
 
   const iconStroke =
@@ -18,7 +19,7 @@ function LocationPin(props: ILocationPinProps) {
   return (
     <Icon
       name="locationPin"
-      customSize="w-6 h-6"
+      customSize={props.customSize || 'w-6 h-6'}
       classNames={`${iconFill} ${iconStroke} stroke-2`}
       beforePaths={
         props.variant === 'outline' ? (

@@ -10,6 +10,7 @@ export default function Page() {
     <AppLayout>
       <AirRightsProvider>
         <Map />
+
         <div className="absolute">
           <Calculator />
         </div>
