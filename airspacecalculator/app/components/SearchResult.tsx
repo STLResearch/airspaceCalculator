@@ -24,14 +24,22 @@ function SearchResult() {
         <SearchResultMetadata
           icon="buildings"
           title="Estimated price per square foot"
-          value={airRightsData.main.estimate.value}
+          value={
+            airRightsData.main.estimate
+              ? airRightsData.main.estimate.value
+              : '0'
+          }
         />
       </div>
 
       <SearchResultMetadata
         icon="priceCoin"
         title="Estimated annual passive income"
-        value={airRightsData.main.estimate.annualProjection}
+        value={
+          airRightsData.main.estimate
+            ? airRightsData.main.estimate.annualProjection
+            : '0'
+        }
       />
 
       <div className="flex flex-col gap-3 mt-4">

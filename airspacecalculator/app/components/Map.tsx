@@ -39,8 +39,10 @@ function Map() {
                 classNames="absolute top-0.5 left-9 rounded p-1"
               >
                 <MapMarkerPopup
-                  estimatedValue={d.estimate.value}
-                  estimatedAnnualProjection={d.estimate.annualProjection}
+                  estimatedValue={d.estimate ? d.estimate.value : '0'}
+                  estimatedAnnualProjection={
+                    d.estimate ? d.estimate.annualProjection : '0'
+                  }
                 />
               </Card>
             </div>
