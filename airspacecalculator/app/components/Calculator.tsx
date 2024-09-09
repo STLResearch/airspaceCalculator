@@ -7,7 +7,10 @@ function Calculator() {
   const { data: airRightsData } = useAirRights();
 
   return (
-    <Card paddingStyle="thin" classNames="sm:rounded-xl sm:w-[450px]">
+    <Card
+      paddingStyle="thin"
+      classNames="flex flex-col sm:rounded-xl sm:w-[450px]"
+    >
       {airRightsData ? <SearchResult /> : <Search />}
     </Card>
   );

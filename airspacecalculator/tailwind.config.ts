@@ -21,6 +21,7 @@ const config: Config = {
       icon: '#222222',
       grey: '#ECECEC',
       disabled: '#939393',
+      danger: '#DC3545',
     },
     borderRadius: {
       none: '0',
