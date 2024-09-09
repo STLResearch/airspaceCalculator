@@ -54,7 +54,7 @@ function Map() {
     if (airRightsData && mapRef.current) {
       mapRef.current.flyTo({
         center: [airRightsData.main.lon, airRightsData.main.lat],
-        zoom: 11,
+        zoom: 14.5,
       });
     }
   }, [airRightsData]);
