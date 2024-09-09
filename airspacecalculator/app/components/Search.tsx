@@ -1,5 +1,3 @@
-'use client';
-
 import AddressInput from './AddressInput';
 import { useAirRights } from './AirRightsProvider';
 import Button from './Button';

@@ -1,5 +1,3 @@
-'use client';
-
 import { useAirRights } from './AirRightsProvider';
 import Card from './Card';
 import Search from './Search';

@@ -1,5 +1,3 @@
-'use client';
-
 import { useAirRights } from './AirRightsProvider';
 import Button from './Button';
 import LocationPin from './LocationPin';
