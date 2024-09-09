@@ -5,6 +5,7 @@ interface IButtonProps {
   disabled?: boolean;
   progress?: boolean;
   href?: string;
+  type?: 'submit' | 'button';
   onClick?: () => any;
 }
 
@@ -42,7 +43,7 @@ function Button(props: IButtonProps) {
   return (
     <button
       className={`${defaultClassNames} ${style} ${props.classNames} ${style}`}
-      type="button"
+      type={props.type || 'button'}
       disabled={props.disabled}
       onClick={handleClick}
     >

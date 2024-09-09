@@ -6,6 +6,7 @@ const defaultClassNames =
 
 function AddressInput() {
   const {
+    loading,
     rawAddress,
     updateRawAddress,
     addressSuggestions,
@@ -38,6 +39,7 @@ function AddressInput() {
           inputMode="text"
           autoComplete="off"
           value={rawAddress}
+          disabled={loading}
           onChange={(e) => handleInputChange(e.target.value)}
           placeholder="Enter address here"
           className={defaultClassNames}

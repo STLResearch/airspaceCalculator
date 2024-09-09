@@ -5,6 +5,11 @@ import Button from './Button';
 function Search() {
   const { loading, rawAddress, getAirRightEstimates } = useAirRights();
 
+  const onSubmitForm = async (e: any) => {
+    e.preventDefault();
+    await getAirRightEstimates(rawAddress);
+  };
+
   return (
     <div className="flex flex-col">
       <h2 className="text-xl font-medium text-navy">
@@ -15,16 +20,18 @@ function Search() {
         estimate, including nearby airspaces and market trends.
       </span>
 
-      <AddressInput />
+      <form onSubmit={onSubmitForm}>
+        <AddressInput />
 
-      <Button
-        variant="primary"
-        label="Estimate airspace"
-        classNames="mt-4"
-        progress={loading}
-        disabled={loading || !rawAddress}
-        onClick={getAirRightEstimates}
-      />
+        <Button
+          type="submit"
+          variant="primary"
+          label="Estimate airspace"
+          classNames="mt-4"
+          progress={loading}
+          disabled={loading || !rawAddress}
+        />
+      </form>
     </div>
   );
 }
