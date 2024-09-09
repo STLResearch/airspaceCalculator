@@ -17,11 +17,7 @@ function AddressInput() {
     if (v === '') {
       setAddressSuggestions([]);
     } else {
-      const handler = setTimeout(async () => {
-        if (handler) {
-          clearTimeout(handler);
-        }
-
+      setTimeout(async () => {
         const suggestions = await getAddressSuggestions(v);
         setAddressSuggestions(suggestions);
       }, 300);
