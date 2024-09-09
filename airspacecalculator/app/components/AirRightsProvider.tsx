@@ -11,24 +11,20 @@ import {
 
 interface IAirRightsContext {
   rawAddress: string;
-  addressSuggestions: any[];
   loading: boolean;
-  ready: boolean;
   data: any;
   updateRawAddress: (address: string) => void;
-  selectAddressSuggestion: (suggestion: string) => void;
+  getAddressSuggestions: (address: string) => Promise<any[]>;
   getAirRightEstimates: () => Promise<void>;
   clearEstimation: () => void;
 }
 
 const Context = createContext<IAirRightsContext>({
   rawAddress: '',
-  addressSuggestions: [],
   data: undefined,
   loading: false,
-  ready: false,
   updateRawAddress: () => null,
-  selectAddressSuggestion: () => null,
+  getAddressSuggestions: async () => [],
   getAirRightEstimates: async () => undefined,
   clearEstimation: () => null,
 });
@@ -38,20 +34,11 @@ export const useAirRights = (): IAirRightsContext =>
 
 function AirRightsProvider(props: PropsWithChildren) {
   const [rawAddress, setRawAddress] = useState('');
-  const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [ready, setReady] = useState(false);
   const [data, setData] = useState<any>(undefined);
 
   const updateRawAddress = (address: string) => {
     setRawAddress(address);
-    setReady(false);
-  };
-
-  const selectAddressSuggestion = (suggestion: string) => {
-    setRawAddress(suggestion);
-    setAddressSuggestions([]);
-    setReady(true);
   };
 
   const getAirRightEstimates = async () => {
@@ -83,50 +70,32 @@ function AirRightsProvider(props: PropsWithChildren) {
     setRawAddress('');
   };
 
-  useEffect(() => {
-    if (!rawAddress) {
-      setAddressSuggestions([]);
-      setReady(false);
-      return;
-    }
+  const getAddressSuggestions = async (address: string) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_MAPBOX_API_URL}/${encodeURIComponent(
+          address
+        )}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`
+      );
 
-    async function getAddressSuggestions() {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_MAPBOX_API_URL}/${encodeURIComponent(
-            rawAddress
-          )}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`
-        );
+      const dataFeatures = response.data.features;
 
-        const dataFeatures = response.data.features;
-
-        if (dataFeatures && dataFeatures.length > 0) {
-          setAddressSuggestions(dataFeatures);
-        }
-      } catch (error) {
-        setAddressSuggestions([]);
+      if (dataFeatures && dataFeatures.length > 0) {
+        return dataFeatures;
       }
+    } catch (error) {
+      return [];
     }
-
-    const handler = setTimeout(async () => {
-      await getAddressSuggestions();
-    }, 500);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [rawAddress]);
+  };
 
   return (
     <Context.Provider
       value={{
         rawAddress,
-        addressSuggestions,
         loading,
-        ready,
         data,
         updateRawAddress,
-        selectAddressSuggestion,
+        getAddressSuggestions,
         getAirRightEstimates,
         clearEstimation,
       }}

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useAirRights } from './AirRightsProvider';
 import Card from './Card';
 
@@ -5,15 +6,26 @@ const defaultClassNames =
   'w-full p-3 rounded bg-grey text-black focus:outline-none focus:ring-1 focus:ring-sky';
 
 function AddressInput() {
-  const {
-    rawAddress,
-    updateRawAddress,
-    addressSuggestions,
-    selectAddressSuggestion,
-  } = useAirRights();
+  const [addressSuggestions, setAddressSuggestions] = useState<any[]>([]);
 
-  const handleInputChange = (v: string) => {
+  const { rawAddress, updateRawAddress, getAddressSuggestions } =
+    useAirRights();
+
+  const handleInputChange = async (v: string) => {
     updateRawAddress(v);
+
+    if (v === '') {
+      setAddressSuggestions([]);
+    } else {
+      const handler = setTimeout(async () => {
+        if (handler) {
+          clearTimeout(handler);
+        }
+
+        const suggestions = await getAddressSuggestions(v);
+        setAddressSuggestions(suggestions);
+      }, 500);
+    }
   };
 
   return (
@@ -40,7 +52,10 @@ function AddressInput() {
               <div
                 key={i}
                 className={`p-2 ${i !== addressSuggestions.length - 1 ? 'border-b' : ''} border-b-grey cursor-pointer hover:bg-grey`}
-                onClick={() => selectAddressSuggestion(s.place_name)}
+                onClick={() => {
+                  updateRawAddress(s.place_name);
+                  setAddressSuggestions([]);
+                }}
               >
                 <div className="flex items-center">
                   <span className="text-sm">{s.place_name}</span>
