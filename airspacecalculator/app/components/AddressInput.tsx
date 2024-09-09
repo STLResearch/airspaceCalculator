@@ -24,7 +24,7 @@ function AddressInput() {
 
         const suggestions = await getAddressSuggestions(v);
         setAddressSuggestions(suggestions);
-      }, 500);
+      }, 300);
     }
   };
 
