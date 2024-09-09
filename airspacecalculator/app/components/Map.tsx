@@ -2,7 +2,9 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import ReactMapGL, { Marker } from 'react-map-gl';
 import { useAirRights } from './AirRightsProvider';
+import Card from './Card';
 import LocationPin from './LocationPin';
+import MapMarkerPopup from './MapMarkerPopup';
 
 function Map() {
   const [viewState, setViewState] = useState({
@@ -26,10 +28,22 @@ function Map() {
             latitude={d.lat}
             anchor="bottom"
           >
-            <LocationPin
-              variant={d.isMain ? 'primary' : 'secondary'}
-              customSize="w-10 h-10"
-            />
+            <div className="relative">
+              <LocationPin
+                variant={d.isMain ? 'primary' : 'secondary'}
+                customSize="w-10 h-10"
+              />
+
+              <Card
+                paddingStyle="none"
+                classNames="absolute top-0.5 left-9 rounded p-1"
+              >
+                <MapMarkerPopup
+                  estimatedValue={d.estimate.value}
+                  estimatedAnnualProjection={d.estimate.annualProjection}
+                />
+              </Card>
+            </div>
           </Marker>
         )
       );
