@@ -10,7 +10,7 @@ interface IAirRightsContext {
   updateRawAddress: (address: string) => void;
   updateAddressSuggestions: (suggestions: any[]) => void;
   getAddressSuggestions: (address: string) => Promise<any[]>;
-  getAirRightEstimates: () => Promise<void>;
+  getAirRightEstimates: (address: string) => Promise<void>;
   clearEstimation: () => void;
 }
 
@@ -45,7 +45,7 @@ function AirRightsProvider(props: PropsWithChildren) {
     setAddressSuggestions(suggestions);
   };
 
-  const getAirRightEstimates = async () => {
+  const getAirRightEstimates = async (address: string) => {
     setDataError('');
     setAddressSuggestions([]);
     setLoading(true);
@@ -53,7 +53,7 @@ function AirRightsProvider(props: PropsWithChildren) {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/air-rights/search/address` +
-          `?address=${encodeURIComponent(rawAddress)}`
+          `?address=${encodeURIComponent(address)}`
       );
 
       const responseData = response.data;

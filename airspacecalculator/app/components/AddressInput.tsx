@@ -50,7 +50,7 @@ function AddressInput() {
         {rawAddress !== '' && addressSuggestions.length > 0 && (
           <Card
             paddingStyle="none"
-            classNames="absolute rounded-lg w-full max-h-[400px] top-14"
+            classNames="absolute rounded-lg w-full max-h-[400px] top-14 z-20"
           >
             {addressSuggestions.map((s, i) => (
               <div
@@ -58,7 +58,7 @@ function AddressInput() {
                 className={`p-2 ${i !== addressSuggestions.length - 1 ? 'border-b' : ''} border-b-grey cursor-pointer hover:bg-grey`}
                 onClick={async () => {
                   updateRawAddress(s.place_name);
-                  await getAirRightEstimates();
+                  await getAirRightEstimates(s.place_name);
                 }}
               >
                 <div className="flex items-center">
