@@ -11,25 +11,34 @@ function getIcon(iconName: any) {
 interface IMapMarkerPopupProps {
   estimatedValue: string;
   estimatedAnnualProjection: string;
+  isAverageEstimate?: boolean;
   classNames?: string;
 }
 
 function MapMarkerPopup(props: IMapMarkerPopupProps) {
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center mr-1">
-        {getIcon('buildings')}
-        <span className={amountLabelClassNames}>
-          {formatAmount(Number(props.estimatedValue))}
-        </span>
+    <div className="flex flex-col">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center mr-1">
+          {getIcon('buildings')}
+          <span className={amountLabelClassNames}>
+            {formatAmount(Number(props.estimatedValue))}
+          </span>
+        </div>
+
+        <div className="flex items-center ml-1">
+          {getIcon('priceCoin')}
+          <span className={amountLabelClassNames}>
+            {formatAmount(Number(props.estimatedAnnualProjection))}
+          </span>
+        </div>
       </div>
 
-      <div className="flex items-center ml-1">
-        {getIcon('priceCoin')}
-        <span className={amountLabelClassNames}>
-          {formatAmount(Number(props.estimatedAnnualProjection))}
+      {props.isAverageEstimate && (
+        <span className="text-xs text-icon font-campton">
+          Estimated value is based on area statistics.
         </span>
-      </div>
+      )}
     </div>
   );
 }

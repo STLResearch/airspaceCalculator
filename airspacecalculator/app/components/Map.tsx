@@ -43,6 +43,7 @@ function Map() {
                   estimatedAnnualProjection={
                     d.estimate ? d.estimate.annualProjection : '0'
                   }
+                  isAverageEstimate={d.isAverage}
                 />
               </Card>
             </div>
