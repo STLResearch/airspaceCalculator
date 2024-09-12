@@ -10,23 +10,12 @@ function AddressInput() {
     rawAddress,
     updateRawAddress,
     addressSuggestions,
-    updateAddressSuggestions,
-    getAddressSuggestions,
     dataError,
     getAirRightEstimates,
   } = useAirRights();
 
   const handleInputChange = async (v: string) => {
     updateRawAddress(v);
-
-    if (v === '') {
-      updateAddressSuggestions([]);
-    } else {
-      setTimeout(async () => {
-        const suggestions = await getAddressSuggestions(v);
-        updateAddressSuggestions(suggestions);
-      }, 300);
-    }
   };
 
   return (

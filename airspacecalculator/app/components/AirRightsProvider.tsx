@@ -1,5 +1,12 @@
 import axios from 'axios';
-import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import useDebounce from 'lib/debounce';
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 interface IAirRightsContext {
   rawAddress: string;
@@ -8,8 +15,6 @@ interface IAirRightsContext {
   data: any;
   dataError: string;
   updateRawAddress: (address: string) => void;
-  updateAddressSuggestions: (suggestions: any[]) => void;
-  getAddressSuggestions: (address: string) => Promise<any[]>;
   getAirRightEstimates: (address: string) => Promise<void>;
   clearEstimation: () => void;
 }
@@ -21,8 +26,6 @@ const Context = createContext<IAirRightsContext>({
   dataError: '',
   loading: false,
   updateRawAddress: () => null,
-  updateAddressSuggestions: () => null,
-  getAddressSuggestions: async () => [],
   getAirRightEstimates: async () => undefined,
   clearEstimation: () => null,
 });
@@ -32,6 +35,8 @@ export const useAirRights = (): IAirRightsContext =>
 
 function AirRightsProvider(props: PropsWithChildren) {
   const [rawAddress, setRawAddress] = useState('');
+  const addressValue = useDebounce(rawAddress, 300);
+
   const [addressSuggestions, setAddressSuggestions] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>(undefined);
@@ -41,9 +46,31 @@ function AirRightsProvider(props: PropsWithChildren) {
     setRawAddress(address);
   };
 
-  const updateAddressSuggestions = (suggestions: any[]) => {
-    setAddressSuggestions(suggestions);
-  };
+  useEffect(() => {
+    async function getAddressSuggestions(address: string) {
+      if (addressValue === '') {
+        setAddressSuggestions([]);
+      } else {
+        try {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_MAPBOX_API_URL}/${encodeURIComponent(
+              address
+            )}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`
+          );
+
+          const dataFeatures = response.data.features;
+
+          if (dataFeatures && dataFeatures.length > 0) {
+            setAddressSuggestions(dataFeatures);
+          }
+        } catch (error) {
+          setAddressSuggestions([]);
+        }
+      }
+    }
+
+    getAddressSuggestions(addressValue);
+  }, [addressValue]);
 
   const getAirRightEstimates = async (address: string) => {
     setDataError('');
@@ -79,24 +106,6 @@ function AirRightsProvider(props: PropsWithChildren) {
     setRawAddress('');
   };
 
-  const getAddressSuggestions = async (address: string) => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_MAPBOX_API_URL}/${encodeURIComponent(
-          address
-        )}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`
-      );
-
-      const dataFeatures = response.data.features;
-
-      if (dataFeatures && dataFeatures.length > 0) {
-        return dataFeatures;
-      }
-    } catch (error) {
-      return [];
-    }
-  };
-
   return (
     <Context.Provider
       value={{
@@ -106,8 +115,6 @@ function AirRightsProvider(props: PropsWithChildren) {
         data,
         dataError,
         updateRawAddress,
-        updateAddressSuggestions,
-        getAddressSuggestions,
         getAirRightEstimates,
         clearEstimation,
       }}
